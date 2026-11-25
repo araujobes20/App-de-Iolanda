@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Score de risco para endometriose</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f7f6fa;--card:#fff;--ink:#1f2433;--mute:#5d6477;--line:#dcdbe6;--acc:#f2b705;--plum:#6b2d5c;--lo:#2f7d5b;--mid:#b9770e;--hi:#a8324a;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#14151c;--card:#1d1f29;--ink:#eceef6;--mute:#a3a9bd;--line:#323544;--plum:#d99ac8;--lo:#6fd1a2;--mid:#f0b44c;--hi:#ff8fa3;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,sans-serif;padding:0 16px 48px}
+main{max-width:720px;margin:0 auto}
+header{padding:32px 0 8px;border-bottom:4px solid var(--acc);margin-bottom:24px}
+h1{font-size:1.9rem;line-height:1.15;margin:0 0 6px;color:var(--plum)}
+header p{margin:0 0 14px;color:var(--mute)}
+fieldset{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 14px}
+legend{font-weight:700;padding:0 6px}
+label.f{display:block;font-weight:600;margin:10px 0 4px}
+input[type=number],select{width:100%;padding:10px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.hint{font-size:.85rem;color:var(--mute);margin:4px 0 0}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.chk input{margin-top:5px}
+button{font:inherit;font-weight:700;padding:12px 22px;border:0;border-radius:8px;background:var(--acc);color:#1f2433;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--plum);outline-offset:2px}
+button.sec{background:transparent;border:1px solid var(--line);color:var(--ink);margin-left:8px}
+#res{display:none;margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.big{font-size:2.6rem;font-weight:700;line-height:1}
+.bar{position:relative;height:14px;border-radius:7px;margin:14px 0 4px;background:linear-gradient(90deg,var(--lo) 0 36%,var(--mid) 36% 63%,var(--hi) 63% 100%)}
+.pin{position:absolute;top:-5px;width:6px;height:24px;border-radius:3px;background:var(--ink);transform:translateX(-3px);transition:left .5s}
+.scale{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mute)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.95rem}
+td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left}
+td:last-child,th:last-child{text-align:right;white-space:nowrap}
+.alert{border-left:4px solid var(--hi);padding:8px 12px;margin:12px 0;background:var(--bg)}
+.disc{font-size:.85rem;color:var(--mute);margin-top:16px}
+#st{font-size:.85rem;color:var(--mute);margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Score de risco para endometriose</h1>
+  <p>Responda cinco perguntas sobre fatores associados à doença. O resultado é uma estimativa educativa, não um diagnóstico.</p>
+</header>
+
+<form id="f" novalidate>
+<fieldset><legend>Dados pessoais</legend>
+  <div class="row">
+    <div><label class="f" for="idade">Idade (anos)</label><input id="idade" type="number" min="10" max="80" required></div>
+    <div><label class="f" for="menarca">Idade na primeira menstruação</label><input id="menarca" type="number" min="7" max="20" required></div>
+  </div>
+  <div class="row">
+    <div><label class="f" for="peso">Peso (kg)</label><input id="peso" type="number" min="25" max="250" step="0.1" required></div>
+    <div><label class="f" for="altura">Altura (cm)</label><input id="altura" type="number" min="120" max="220" required></div>
+  </div>
+</fieldset>
+
+<fieldset><legend>Ciclo e gestações</legend>
+  <label class="f" for="ciclo">Duração habitual do ciclo (dias)</label>
+  <input id="ciclo" type="number" min="14" max="90" required>
+  <p class="hint">Conte do primeiro dia de uma menstruação até o dia anterior à seguinte.</p>
+  <label class="f" for="gest">Número de gestações (incluindo perdas)</label>
+  <input id="gest" type="number" min="0" max="20" required>
+</fieldset>
+
+<fieldset><legend>Histórico familiar</legend>
+  <label class="f" for="fam">Mãe ou irmã com endometriose?</label>
+  <select id="fam" required>
+    <option value="">Selecione</option>
+    <option value="1">Sim, parente de 1º grau (mãe ou irmã)</option>
+    <option value="2">Apenas outro parente (tia, avó, prima)</option>
+    <option value="0">Não ou não sei</option>
+  </select>
+</fieldset>
+
+<fieldset><legend>Sintomas atuais (não entram no score)</legend>
+  <div class="chk"><input type="checkbox" id="s1"><label for="s1">Cólica menstrual forte que atrapalha atividades</label></div>
+  <div class="chk"><input type="checkbox" id="s2"><label for="s2">Dor pélvica fora da menstruação</label></div>
+  <div class="chk"><input type="checkbox" id="s3"><label for="s3">Dor na relação sexual</label></div>
+  <div class="chk"><input type="checkbox" id="s4"><label for="s4">Dor ao evacuar ou urinar durante a menstruação</label></div>
+  <div class="chk"><input type="checkbox" id="s5"><label for="s5">Dificuldade para engravidar</label></div>
+</fieldset>
+
+<div class="chk"><input type="checkbox" id="lgpd"><label for="lgpd">Autorizo o registro anônimo das minhas respostas para fins de pesquisa e extensão. Nenhum nome ou contato é coletado.</label></div>
+
+<button type="submit">Calcular score</button><button type="button" class="sec" id="rst">Limpar</button>
+</form>
+
+<section id="res" aria-live="polite">
+  <div class="big"><span id="pts">0</span><span style="font-size:1.1rem;color:var(--mute)"> / 11 pontos</span></div>
+  <h2 id="cat" style="margin:6px 0 0"></h2>
+  <div class="bar"><div class="pin" id="pin"></div></div>
+  <div class="scale"><span>0</span><span>baixo até 3</span><span>moderado 4 a 6</span><span>elevado 7 ou mais</span></div>
+  <table><thead><tr><th>Fator</th><th>Pontos</th></tr></thead><tbody id="tb"></tbody></table>
+  <p id="rec"></p>
+  <div class="alert" id="sint" hidden></div>
+  <p id="st"></p>
+  <p class="disc">Os fatores usados (histórico familiar, menarca precoce, ciclos curtos, IMC baixo e nenhuma ou poucas gestações) são associações populacionais, não causas nem uma forma de prever quem terá a doença. Os pesos e pontos de corte deste score são ilustrativos e não foram validados clinicamente. Endometriose pode ocorrer sem nenhum desses fatores, e o diagnóstico depende de avaliação médica.</p>
+</section>
+</main>
+
+<script>
+// Cole aqui a URL do app da web gerada no Google Apps Script (termina em /exec). Deixe vazio para não registrar.
+const SCRIPT_URL = "";
+
+const $ = id => document.getElementById(id);
+
+function calcular(d){
+  const itens = [];
+  const imc = d.peso / Math.pow(d.altura/100, 2);
+  let p;
+
+  p = d.fam === 1 ? 3 : d.fam === 2 ? 1 : 0;
+  itens.push(["Histórico familiar", p]);
+
+  p = d.menarca <= 11 ? 2 : d.menarca === 12 ? 1 : 0;
+  itens.push([`Menarca aos ${d.menarca} anos`, p]);
+
+  p = d.ciclo <= 24 ? 2 : d.ciclo <= 27 ? 1 : 0;
+  itens.push([`Ciclo de ${d.ciclo} dias`, p]);
+
+  p = imc < 18.5 ? 2 : imc < 25 ? 1 : 0;
+  itens.push([`IMC ${imc.toFixed(1).replace(".", ",")}`, p]);
+
+  p = d.gest === 0 ? 2 : d.gest === 1 ? 1 : 0;
+  itens.push([`${d.gest} gestação(ões)`, p]);
+
+  const total = itens.reduce((s, i) => s + i[1], 0);
+  const cat = total <= 3 ? "Risco baixo" : total <= 6 ? "Risco moderado" : "Risco elevado";
+  return {itens, total, cat, imc};
+}
+
+const REC = {
+  "Risco baixo": "Poucos fatores associados. Mesmo assim, dor intensa ou persistente merece avaliação ginecológica, porque o score não exclui a doença.",
+  "Risco moderado": "Alguns fatores associados estão presentes. Se houver sintomas, converse com um(a) ginecologista; se não houver, mantenha o acompanhamento de rotina.",
+  "Risco elevado": "Vários fatores associados estão presentes. Se houver sintomas, procure avaliação ginecológica; se não houver, informe seu histórico à sua equipe de saúde."
+};
+
+$("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const d = {
+    idade: +$("idade").value, menarca: +$("menarca").value, peso: +$("peso").value,
+    altura: +$("altura").value, ciclo: +$("ciclo").value, gest: +$("gest").value,
+    fam: $("fam").value === "" ? NaN : +$("fam").value
+  };
+  if (Object.values(d).some(v => Number.isNaN(v) || v === 0 && false) || !$("idade").value || !$("menarca").value ||
+      !$("peso").value || !$("altura").value || !$("ciclo").value || !$("gest").value) {
+    alert("Preencha todos os campos antes de calcular."); return;
+  }
+  const r = calcular(d);
+  const sint = ["s1","s2","s3","s4","s5"].filter(i => $(i).checked).length;
+
+  $("pts").textContent = r.total;
+  $("cat").textContent = r.cat;
+  $("cat").style.color = r.total <= 3 ? "var(--lo)" : r.total <= 6 ? "var(--mid)" : "var(--hi)";
+  $("pin").style.left = (r.total / 11 * 100) + "%";
+  $("tb").innerHTML = r.itens.map(i => `<tr><td>${i[0]}</td><td>+${i[1]}</td></tr>`).join("");
+  $("rec").textContent = REC[r.cat];
+  const al = $("sint");
+  if (sint > 0) {
+    al.hidden = false;
+    al.textContent = `Você marcou ${sint} sintoma(s). Independentemente do score, sintomas assim justificam avaliação ginecológica.`;
+  } else al.hidden = true;
+  $("res").style.display = "block";
+  $("res").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth"});
+
+  $("st").textContent = "";
+  if (SCRIPT_URL && $("lgpd").checked) {
+    const payload = {
+      idade: d.idade, menarca: d.menarca, peso: d.peso, altura: d.altura, imc: +r.imc.toFixed(1),
+      ciclo: d.ciclo, gestacoes: d.gest, familiar: d.fam, sintomas: sint,
+      score: r.total, categoria: r.cat
+    };
+    try {
+      await fetch(SCRIPT_URL, {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload)});
+      $("st").textContent = "Respostas registradas de forma anônima.";
+    } catch (err) {
+      $("st").textContent = "Não foi possível registrar as respostas. O resultado acima continua válido.";
+    }
+  }
+});
+
+$("rst").addEventListener("click", () => {
+  $("f").reset(); $("res").style.display = "none"; window.scrollTo(0, 0);
+});
+</script>
+</body>
+</html>
